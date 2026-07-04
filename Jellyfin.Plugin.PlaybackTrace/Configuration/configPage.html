@@ -1,46 +1,403 @@
 <div id="PlaybackTraceConfigPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-button">
   <div data-role="content">
     <div class="content-primary">
-      <form id="PlaybackTraceConfigForm">
-        <div class="sectionTitleContainer flex align-items-center">
-          <h2 class="sectionTitle">Playback Trace</h2>
-        </div>
+      <div class="sectionTitleContainer flex align-items-center">
+        <h2 class="sectionTitle">Playback Trace</h2>
+      </div>
 
-        <div class="paperList" style="padding:1em;">
-          <p>Export recent Jellyfin playback timeline records as administrator-only HTML tables.</p>
-          <p>
-            <a id="PlaybackTraceExportHtml" is="emby-linkbutton" class="raised button-submit" target="_blank">
-              <span>Open HTML Export</span>
-            </a>
-            <a id="PlaybackTraceExportCsv" is="emby-linkbutton" class="raised" target="_blank">
-              <span>Download CSV</span>
-            </a>
-          </p>
-          <p>
-            <a id="PlaybackTraceEvents" is="emby-linkbutton" class="raised" target="_blank">
-              <span>Raw Events JSON</span>
-            </a>
-            <a id="PlaybackTraceSegments" is="emby-linkbutton" class="raised" target="_blank">
-              <span>Segments JSON</span>
-            </a>
-          </p>
+      <style>
+        #PlaybackTraceConfigPage .pt-actions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: .75em;
+          margin: 1em 0 1.25em;
+        }
+
+        #PlaybackTraceConfigPage .pt-toolbar {
+          align-items: center;
+          display: grid;
+          gap: .75em;
+          grid-template-columns: auto 1fr auto;
+          margin: 1em 0;
+        }
+
+        #PlaybackTraceConfigPage .pt-tabs {
+          display: inline-flex;
+          overflow: hidden;
+          border: 1px solid rgba(255, 255, 255, .18);
+          border-radius: .25em;
+        }
+
+        #PlaybackTraceConfigPage .pt-tab {
+          background: transparent;
+          border: 0;
+          color: inherit;
+          cursor: pointer;
+          font: inherit;
+          min-height: 2.8em;
+          padding: 0 1em;
+        }
+
+        #PlaybackTraceConfigPage .pt-tab.is-active {
+          background: rgba(255, 255, 255, .18);
+        }
+
+        #PlaybackTraceConfigPage .pt-search {
+          min-width: 14em;
+          width: 100%;
+        }
+
+        #PlaybackTraceConfigPage .pt-summary {
+          color: #bbb;
+          font-size: .92em;
+          margin: .35em 0 1em;
+        }
+
+        #PlaybackTraceConfigPage .pt-table-wrap {
+          overflow-x: auto;
+          border-top: 1px solid rgba(255, 255, 255, .16);
+        }
+
+        #PlaybackTraceConfigPage .pt-table {
+          border-collapse: collapse;
+          min-width: 980px;
+          width: 100%;
+        }
+
+        #PlaybackTraceConfigPage .pt-table th,
+        #PlaybackTraceConfigPage .pt-table td {
+          border-bottom: 1px solid rgba(255, 255, 255, .16);
+          padding: 1em .75em;
+          text-align: left;
+          vertical-align: middle;
+        }
+
+        #PlaybackTraceConfigPage .pt-table th {
+          color: #ddd;
+          font-weight: 600;
+          white-space: nowrap;
+        }
+
+        #PlaybackTraceConfigPage .pt-pill {
+          background: #00a4dc;
+          border-radius: 999px;
+          color: #fff;
+          display: inline-block;
+          font-size: .86em;
+          font-weight: 600;
+          min-width: 4.5em;
+          padding: .35em .7em;
+          text-align: center;
+        }
+
+        #PlaybackTraceConfigPage .pt-pill-seek {
+          background: #a970ff;
+        }
+
+        #PlaybackTraceConfigPage .pt-pill-pause {
+          background: #d79225;
+        }
+
+        #PlaybackTraceConfigPage .pt-pill-stop {
+          background: #777;
+        }
+
+        #PlaybackTraceConfigPage .pt-muted {
+          color: #aaa;
+          font-size: .9em;
+          margin-top: .25em;
+        }
+
+        #PlaybackTraceConfigPage .pt-empty,
+        #PlaybackTraceConfigPage .pt-error {
+          color: #bbb;
+          padding: 2em .75em;
+        }
+
+        @media (max-width: 700px) {
+          #PlaybackTraceConfigPage .pt-toolbar {
+            grid-template-columns: 1fr;
+          }
+
+          #PlaybackTraceConfigPage .pt-tabs,
+          #PlaybackTraceConfigPage .pt-tab {
+            width: 100%;
+          }
+        }
+      </style>
+
+      <div class="paperList" style="padding:1em;">
+        <div>最近播放轨迹会显示在下面，也可以导出 HTML 或 CSV。</div>
+        <div class="pt-actions">
+          <a id="PlaybackTraceExportHtml" is="emby-linkbutton" class="raised button-submit" target="_blank">
+            <span>打开 HTML 表格</span>
+          </a>
+          <a id="PlaybackTraceExportCsv" is="emby-linkbutton" class="raised" target="_blank">
+            <span>下载 CSV</span>
+          </a>
+          <a id="PlaybackTraceEvents" is="emby-linkbutton" class="raised" target="_blank">
+            <span>原始事件 JSON</span>
+          </a>
+          <a id="PlaybackTraceSegments" is="emby-linkbutton" class="raised" target="_blank">
+            <span>观看片段 JSON</span>
+          </a>
         </div>
-      </form>
+      </div>
+
+      <div class="paperList" style="padding:1em; margin-top:1em;">
+        <div class="pt-toolbar">
+          <div class="pt-tabs" aria-label="Playback Trace filter">
+            <button class="pt-tab is-active" type="button" data-filter="all">全部</button>
+            <button class="pt-tab" type="button" data-filter="segments">观看片段</button>
+            <button class="pt-tab" type="button" data-filter="events">事件</button>
+          </div>
+          <input id="PlaybackTraceSearch" class="pt-search" type="search" placeholder="搜索用户、影片、设备、事件" />
+          <button id="PlaybackTraceRefresh" is="emby-button" type="button" class="raised">
+            <span>刷新</span>
+          </button>
+        </div>
+        <div id="PlaybackTraceSummary" class="pt-summary">正在读取记录...</div>
+        <div class="pt-table-wrap">
+          <table class="pt-table">
+            <thead>
+              <tr>
+                <th>时间</th>
+                <th>类型</th>
+                <th>用户</th>
+                <th>影片</th>
+                <th>时间轴 / 明细</th>
+                <th>设备</th>
+              </tr>
+            </thead>
+            <tbody id="PlaybackTraceRows">
+              <tr>
+                <td colspan="6" class="pt-empty">正在读取记录...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
     (() => {
       const page = document.querySelector('#PlaybackTraceConfigPage');
+      let rows = [];
+      let filter = 'all';
+
+      function field(item, camelName, pascalName) {
+        return item[camelName] ?? item[pascalName] ?? '';
+      }
+
+      function formatDate(value) {
+        if (!value) {
+          return '-';
+        }
+
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) {
+          return String(value);
+        }
+
+        return date.toLocaleString();
+      }
+
+      function formatDuration(seconds) {
+        const total = Math.max(0, Math.round(Number(seconds) || 0));
+        const h = Math.floor(total / 3600);
+        const m = Math.floor((total % 3600) / 60);
+        const s = total % 60;
+        if (h > 0) {
+          return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }
+
+        return `${m}:${String(s).padStart(2, '0')}`;
+      }
+
+      function eventLabel(eventType) {
+        const labels = {
+          start: '开始',
+          normal_play: '播放',
+          pause: '暂停',
+          resume: '继续',
+          seek_forward: '快进',
+          seek_backward: '后退',
+          stop: '停止',
+          segment: '观看片段'
+        };
+
+        return labels[eventType] || eventType || '-';
+      }
+
+      function pillClass(eventType) {
+        if (eventType === 'seek_forward' || eventType === 'seek_backward') {
+          return 'pt-pill pt-pill-seek';
+        }
+
+        if (eventType === 'pause' || eventType === 'resume') {
+          return 'pt-pill pt-pill-pause';
+        }
+
+        if (eventType === 'stop') {
+          return 'pt-pill pt-pill-stop';
+        }
+
+        return 'pt-pill';
+      }
+
+      function escapeHtml(value) {
+        return String(value ?? '')
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;')
+          .replaceAll("'", '&#39;');
+      }
+
+      function rowText(row) {
+        return [
+          row.kind,
+          row.eventType,
+          row.userName,
+          row.itemName,
+          row.details,
+          row.device
+        ].join(' ').toLowerCase();
+      }
+
+      function render() {
+        const search = (page.querySelector('#PlaybackTraceSearch').value || '').trim().toLowerCase();
+        const body = page.querySelector('#PlaybackTraceRows');
+        const visible = rows
+          .filter(row => filter === 'all' || row.kind === filter)
+          .filter(row => !search || rowText(row).includes(search));
+
+        page.querySelector('#PlaybackTraceSummary').textContent =
+          `共 ${rows.length} 条，当前显示 ${visible.length} 条。观看片段会在暂停、快进、停止时生成。`;
+
+        if (visible.length === 0) {
+          body.innerHTML = '<tr><td colspan="6" class="pt-empty">还没有记录。播放一段视频后，回到这里点刷新。</td></tr>';
+          return;
+        }
+
+        body.innerHTML = visible.map(row => `
+          <tr>
+            <td>${escapeHtml(formatDate(row.timestamp))}</td>
+            <td><span class="${pillClass(row.eventType)}">${escapeHtml(eventLabel(row.eventType))}</span></td>
+            <td>${escapeHtml(row.userName || '-')}</td>
+            <td>
+              <div>${escapeHtml(row.itemName || '-')}</div>
+              <div class="pt-muted">${escapeHtml(row.itemType || '')}</div>
+            </td>
+            <td>${escapeHtml(row.details || '-')}</td>
+            <td>
+              <div>${escapeHtml(row.device || '-')}</div>
+              <div class="pt-muted">${escapeHtml(row.client || '')}</div>
+            </td>
+          </tr>`).join('');
+      }
+
+      function toEventRow(item) {
+        const eventType = field(item, 'eventType', 'EventType');
+        const from = field(item, 'fromSeconds', 'FromSeconds');
+        const to = field(item, 'toSeconds', 'ToSeconds');
+        const pos = field(item, 'positionSeconds', 'PositionSeconds');
+        let details = `位置 ${formatDuration(pos)}`;
+
+        if (from !== '' && to !== '') {
+          details = `${formatDuration(from)} -> ${formatDuration(to)}`;
+        }
+
+        return {
+          kind: 'events',
+          eventType,
+          timestamp: field(item, 'timestamp', 'Timestamp'),
+          userName: field(item, 'userName', 'UserName'),
+          itemName: field(item, 'itemName', 'ItemName'),
+          itemType: field(item, 'itemType', 'ItemType'),
+          details,
+          device: field(item, 'deviceName', 'DeviceName'),
+          client: field(item, 'clientName', 'ClientName')
+        };
+      }
+
+      function toSegmentRow(item) {
+        const start = field(item, 'startSeconds', 'StartSeconds');
+        const end = field(item, 'endSeconds', 'EndSeconds');
+        const watched = field(item, 'watchedWallSeconds', 'WatchedWallSeconds');
+        const closedBy = field(item, 'closedBy', 'ClosedBy');
+
+        return {
+          kind: 'segments',
+          eventType: 'segment',
+          timestamp: field(item, 'endedAt', 'EndedAt'),
+          userName: field(item, 'userName', 'UserName'),
+          itemName: field(item, 'itemName', 'ItemName'),
+          itemType: '',
+          details: `${formatDuration(start)} - ${formatDuration(end)}，看了 ${formatDuration(watched)}，结束原因：${eventLabel(closedBy)}`,
+          device: field(item, 'deviceName', 'DeviceName'),
+          client: field(item, 'clientName', 'ClientName')
+        };
+      }
+
+      function getJson(path) {
+        const url = ApiClient.getUrl(path);
+        if (ApiClient.getJSON) {
+          return ApiClient.getJSON(url);
+        }
+
+        if (ApiClient.ajax) {
+          return ApiClient.ajax({
+            type: 'GET',
+            url,
+            dataType: 'json'
+          });
+        }
+
+        return fetch(url, { credentials: 'include' }).then(response => response.json());
+      }
+
+      function loadRows() {
+        page.querySelector('#PlaybackTraceSummary').textContent = '正在读取记录...';
+        page.querySelector('#PlaybackTraceRows').innerHTML = '<tr><td colspan="6" class="pt-empty">正在读取记录...</td></tr>';
+
+        Promise.all([
+          getJson('playback_trace/events?limit=500'),
+          getJson('playback_trace/segments?limit=500')
+        ]).then(([events, segments]) => {
+          rows = [
+            ...(Array.isArray(events) ? events.map(toEventRow) : []),
+            ...(Array.isArray(segments) ? segments.map(toSegmentRow) : [])
+          ].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+          render();
+        }).catch(() => {
+          page.querySelector('#PlaybackTraceSummary').textContent = '读取失败';
+          page.querySelector('#PlaybackTraceRows').innerHTML =
+            '<tr><td colspan="6" class="pt-error">读取失败。请确认插件已重启，并在 Jellyfin 日志里搜索 PlaybackTrace。</td></tr>';
+        });
+      }
 
       page.addEventListener('viewshow', () => {
         const days = 30;
-        document.querySelector('#PlaybackTraceExportHtml').href = ApiClient.getUrl(`playback_trace/export.html?days=${days}`);
-        document.querySelector('#PlaybackTraceExportCsv').href = ApiClient.getUrl(`playback_trace/export.csv?days=${days}`);
-        document.querySelector('#PlaybackTraceEvents').href = ApiClient.getUrl('playback_trace/events?limit=500');
-        document.querySelector('#PlaybackTraceSegments').href = ApiClient.getUrl('playback_trace/segments?limit=500');
+        page.querySelector('#PlaybackTraceExportHtml').href = ApiClient.getUrl(`playback_trace/export.html?days=${days}`);
+        page.querySelector('#PlaybackTraceExportCsv').href = ApiClient.getUrl(`playback_trace/export.csv?days=${days}`);
+        page.querySelector('#PlaybackTraceEvents').href = ApiClient.getUrl('playback_trace/events?limit=500');
+        page.querySelector('#PlaybackTraceSegments').href = ApiClient.getUrl('playback_trace/segments?limit=500');
+        loadRows();
+      });
+
+      page.querySelector('#PlaybackTraceSearch').addEventListener('input', render);
+      page.querySelector('#PlaybackTraceRefresh').addEventListener('click', loadRows);
+      page.querySelectorAll('.pt-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          page.querySelectorAll('.pt-tab').forEach(item => item.classList.remove('is-active'));
+          tab.classList.add('is-active');
+          filter = tab.getAttribute('data-filter') || 'all';
+          render();
+        });
       });
     })();
   </script>
 </div>
-

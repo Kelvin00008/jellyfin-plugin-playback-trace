@@ -8,6 +8,14 @@
     "category": "Administration",
     "versions": [
       {
+        "version": "0.1.3.0",
+        "changelog": "Add an in-dashboard activity-style playback trace table with search and filters.",
+        "targetAbi": "10.10.0.0",
+        "sourceUrl": "https://raw.githubusercontent.com/Kelvin00008/jellyfin-plugin-playback-trace/main/releases/jellyfin-plugin-playback-trace-0.1.3.0.zip",
+        "checksum": "63f6eca2a339727bda1e98315c21c568",
+        "timestamp": "2026-07-04T10:00:00Z"
+      },
+      {
         "version": "0.1.2.0",
         "changelog": "Fix Jellyfin 10.10 plugin repository compatibility and package layout.",
         "targetAbi": "10.10.0.0",
