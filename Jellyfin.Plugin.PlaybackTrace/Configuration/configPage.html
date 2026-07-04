@@ -1,0 +1,46 @@
+<div id="PlaybackTraceConfigPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-button">
+  <div data-role="content">
+    <div class="content-primary">
+      <form id="PlaybackTraceConfigForm">
+        <div class="sectionTitleContainer flex align-items-center">
+          <h2 class="sectionTitle">Playback Trace</h2>
+        </div>
+
+        <div class="paperList" style="padding:1em;">
+          <p>Export recent Jellyfin playback timeline records as administrator-only HTML tables.</p>
+          <p>
+            <a id="PlaybackTraceExportHtml" is="emby-linkbutton" class="raised button-submit" target="_blank">
+              <span>Open HTML Export</span>
+            </a>
+            <a id="PlaybackTraceExportCsv" is="emby-linkbutton" class="raised" target="_blank">
+              <span>Download CSV</span>
+            </a>
+          </p>
+          <p>
+            <a id="PlaybackTraceEvents" is="emby-linkbutton" class="raised" target="_blank">
+              <span>Raw Events JSON</span>
+            </a>
+            <a id="PlaybackTraceSegments" is="emby-linkbutton" class="raised" target="_blank">
+              <span>Segments JSON</span>
+            </a>
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const page = document.querySelector('#PlaybackTraceConfigPage');
+
+      page.addEventListener('viewshow', () => {
+        const days = 30;
+        document.querySelector('#PlaybackTraceExportHtml').href = ApiClient.getUrl(`playback_trace/export.html?days=${days}`);
+        document.querySelector('#PlaybackTraceExportCsv').href = ApiClient.getUrl(`playback_trace/export.csv?days=${days}`);
+        document.querySelector('#PlaybackTraceEvents').href = ApiClient.getUrl('playback_trace/events?limit=500');
+        document.querySelector('#PlaybackTraceSegments').href = ApiClient.getUrl('playback_trace/segments?limit=500');
+      });
+    })();
+  </script>
+</div>
+

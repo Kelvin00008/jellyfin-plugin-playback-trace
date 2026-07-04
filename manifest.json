@@ -1,0 +1,20 @@
+[
+  {
+    "guid": "29d31092-3377-48c6-a161-ef432d6a61e4",
+    "name": "Playback Trace",
+    "description": "Records Jellyfin playback progress and exports watched timeline segments, seeks, pauses, resumes, and raw playback events as HTML tables.",
+    "overview": "Detailed server-side playback timeline tracing",
+    "owner": "Kelvin00008",
+    "category": "Administration",
+    "versions": [
+      {
+        "version": "0.1.0.0",
+        "changelog": "Initial build with watched segment tracking and HTML export.",
+        "targetAbi": "10.11.0.0",
+        "sourceUrl": "https://raw.githubusercontent.com/Kelvin00008/jellyfin-plugin-playback-trace/main/releases/jellyfin-plugin-playback-trace-0.1.0.0.zip",
+        "checksum": "f602ca2234002f0d924dce795bb3449e",
+        "timestamp": "2026-07-04T08:41:00Z"
+      }
+    ]
+  }
+]
