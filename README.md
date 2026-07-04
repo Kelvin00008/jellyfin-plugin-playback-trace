@@ -89,7 +89,7 @@ git tag v0.1.0
 git push origin v0.1.0
 ```
 
-The repository already includes `releases/jellyfin-plugin-playback-trace-0.1.0.0.zip` for a first manual install through `manifest.json`. The workflow can also build a GitHub release later; if you use the workflow, it will recompute the checksum and update `manifest.json`.
+The repository already includes prebuilt zip files for manual install through `manifest.json`. Version `0.1.1.0` targets Jellyfin `10.10.3.0`; version `0.1.0.0` targets Jellyfin `10.11.0.0`. The workflow can also build a GitHub release later; if you use the workflow, it will recompute the checksum and update `manifest.json`.
 
 ## Privacy
 

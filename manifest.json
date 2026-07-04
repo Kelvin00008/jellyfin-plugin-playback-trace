@@ -8,6 +8,14 @@
     "category": "Administration",
     "versions": [
       {
+        "version": "0.1.1.0",
+        "changelog": "Build for Jellyfin 10.10.3 / .NET 8 compatibility.",
+        "targetAbi": "10.10.3.0",
+        "sourceUrl": "https://raw.githubusercontent.com/Kelvin00008/jellyfin-plugin-playback-trace/main/releases/jellyfin-plugin-playback-trace-0.1.1.0.zip",
+        "checksum": "6e340301e107a1d4b68f9902d1944d64",
+        "timestamp": "2026-07-04T09:25:00Z"
+      },
+      {
         "version": "0.1.0.0",
         "changelog": "Initial build with watched segment tracking and HTML export.",
         "targetAbi": "10.11.0.0",
