@@ -4,8 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>Jellyfin.Plugin.PlaybackTrace</RootNamespace>
     <AssemblyName>Jellyfin.Plugin.PlaybackTrace</AssemblyName>
-    <Version>0.1.1.0</Version>
-    <FileVersion>0.1.1.0</FileVersion>
+    <Version>0.1.2.0</Version>
+    <FileVersion>0.1.2.0</FileVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>

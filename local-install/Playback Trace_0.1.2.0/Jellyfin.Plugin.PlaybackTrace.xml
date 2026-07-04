@@ -1,0 +1,353 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Jellyfin.Plugin.PlaybackTrace</name>
+    </assembly>
+    <members>
+        <member name="T:Jellyfin.Plugin.PlaybackTrace.Api.PlaybackTraceController">
+            <summary>
+            Playback Trace export API.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.PlaybackTrace.Api.PlaybackTraceController.#ctor(Jellyfin.Plugin.PlaybackTrace.Services.PlaybackTraceStore)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Jellyfin.Plugin.PlaybackTrace.Api.PlaybackTraceController"/> class.
+            </summary>
+            <param name="store">Playback Trace store.</param>
+        </member>
+        <member name="M:Jellyfin.Plugin.PlaybackTrace.Api.PlaybackTraceController.GetEvents(System.Int32)">
+            <summary>
+            Gets recent raw events.
+            </summary>
+            <param name="limit">Maximum number of rows.</param>
+            <returns>Raw events.</returns>
+        </member>
+        <member name="M:Jellyfin.Plugin.PlaybackTrace.Api.PlaybackTraceController.GetSegments(System.Int32)">
+            <summary>
+            Gets recent watched segments.
+            </summary>
+            <param name="limit">Maximum number of rows.</param>
+            <returns>Watched segments.</returns>
+        </member>
+        <member name="M:Jellyfin.Plugin.PlaybackTrace.Api.PlaybackTraceController.ExportHtml(System.Int32)">
+            <summary>
+            Exports records as an HTML table report.
+            </summary>
+            <param name="days">Number of days to include.</param>
+            <returns>HTML report.</returns>
+        </member>
+        <member name="M:Jellyfin.Plugin.PlaybackTrace.Api.PlaybackTraceController.ExportCsv(System.Int32)">
+            <summary>
+            Exports watched segments as CSV.
+            </summary>
+            <param name="days">Number of days to include.</param>
+            <returns>CSV report.</returns>
+        </member>
+        <member name="T:Jellyfin.Plugin.PlaybackTrace.Configuration.PluginConfiguration">
+            <summary>
+            Playback Trace plugin configuration.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Configuration.PluginConfiguration.SeekThresholdSeconds">
+            <summary>
+            Gets or sets the timeline jump threshold used to infer seek events.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Configuration.PluginConfiguration.MinimumSegmentSeconds">
+            <summary>
+            Gets or sets the minimum segment duration saved to the watched segment file.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Configuration.PluginConfiguration.SampleIntervalSeconds">
+            <summary>
+            Gets or sets how often normal playback progress samples are written.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Configuration.PluginConfiguration.DefaultExportDays">
+            <summary>
+            Gets or sets the default number of days included in exports.
+            </summary>
+        </member>
+        <member name="T:Jellyfin.Plugin.PlaybackTrace.EventMonitorEntryPoint">
+            <summary>
+            Monitors Jellyfin playback events.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.PlaybackTrace.EventMonitorEntryPoint.#ctor(MediaBrowser.Controller.Session.ISessionManager,Jellyfin.Plugin.PlaybackTrace.Services.PlaybackTraceStore,Microsoft.Extensions.Logging.ILogger{Jellyfin.Plugin.PlaybackTrace.EventMonitorEntryPoint})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Jellyfin.Plugin.PlaybackTrace.EventMonitorEntryPoint"/> class.
+            </summary>
+            <param name="sessionManager">Session manager.</param>
+            <param name="store">Trace store.</param>
+            <param name="logger">Logger.</param>
+        </member>
+        <member name="M:Jellyfin.Plugin.PlaybackTrace.EventMonitorEntryPoint.StartAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Jellyfin.Plugin.PlaybackTrace.EventMonitorEntryPoint.StopAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Jellyfin.Plugin.PlaybackTrace.EventMonitorEntryPoint.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:Jellyfin.Plugin.PlaybackTrace.Models.PlaybackTraceEvent">
+            <summary>
+            A single playback timeline event.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.PlaybackTraceEvent.EventId">
+            <summary>
+            Gets or sets the event id.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.PlaybackTraceEvent.EventType">
+            <summary>
+            Gets or sets the event type.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.PlaybackTraceEvent.Timestamp">
+            <summary>
+            Gets or sets the event timestamp.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.PlaybackTraceEvent.SessionKey">
+            <summary>
+            Gets or sets the session key.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.PlaybackTraceEvent.SessionId">
+            <summary>
+            Gets or sets the Jellyfin session id.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.PlaybackTraceEvent.PlaySessionId">
+            <summary>
+            Gets or sets the play session id.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.PlaybackTraceEvent.UserId">
+            <summary>
+            Gets or sets the user id.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.PlaybackTraceEvent.UserName">
+            <summary>
+            Gets or sets the user name.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.PlaybackTraceEvent.ItemId">
+            <summary>
+            Gets or sets the item id.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.PlaybackTraceEvent.ItemName">
+            <summary>
+            Gets or sets the item name.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.PlaybackTraceEvent.ItemType">
+            <summary>
+            Gets or sets the item type.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.PlaybackTraceEvent.ClientName">
+            <summary>
+            Gets or sets the client name.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.PlaybackTraceEvent.DeviceId">
+            <summary>
+            Gets or sets the device id.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.PlaybackTraceEvent.DeviceName">
+            <summary>
+            Gets or sets the device name.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.PlaybackTraceEvent.PositionSeconds">
+            <summary>
+            Gets or sets the media position in seconds.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.PlaybackTraceEvent.FromSeconds">
+            <summary>
+            Gets or sets the previous media position in seconds.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.PlaybackTraceEvent.ToSeconds">
+            <summary>
+            Gets or sets the target media position in seconds.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.PlaybackTraceEvent.WallDeltaSeconds">
+            <summary>
+            Gets or sets the wall-clock delta since the previous event.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.PlaybackTraceEvent.PositionDeltaSeconds">
+            <summary>
+            Gets or sets the media-position delta since the previous event.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.PlaybackTraceEvent.IsPaused">
+            <summary>
+            Gets or sets a value indicating whether playback is paused.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.PlaybackTraceEvent.IsAutomated">
+            <summary>
+            Gets or sets a value indicating whether Jellyfin generated the event automatically.
+            </summary>
+        </member>
+        <member name="T:Jellyfin.Plugin.PlaybackTrace.Models.WatchedSegment">
+            <summary>
+            A continuous timeline range that was actually played.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.WatchedSegment.SegmentId">
+            <summary>
+            Gets or sets the segment id.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.WatchedSegment.SessionKey">
+            <summary>
+            Gets or sets the session key.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.WatchedSegment.UserId">
+            <summary>
+            Gets or sets the user id.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.WatchedSegment.UserName">
+            <summary>
+            Gets or sets the user name.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.WatchedSegment.ItemId">
+            <summary>
+            Gets or sets the item id.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.WatchedSegment.ItemName">
+            <summary>
+            Gets or sets the item name.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.WatchedSegment.ClientName">
+            <summary>
+            Gets or sets the client name.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.WatchedSegment.DeviceName">
+            <summary>
+            Gets or sets the device name.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.WatchedSegment.StartSeconds">
+            <summary>
+            Gets or sets the segment media start in seconds.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.WatchedSegment.EndSeconds">
+            <summary>
+            Gets or sets the segment media end in seconds.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.WatchedSegment.WatchedWallSeconds">
+            <summary>
+            Gets or sets the wall-clock seconds spent in this segment.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.WatchedSegment.ClosedBy">
+            <summary>
+            Gets or sets why the segment was closed.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.WatchedSegment.StartedAt">
+            <summary>
+            Gets or sets the wall-clock time when the segment started.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Models.WatchedSegment.EndedAt">
+            <summary>
+            Gets or sets the wall-clock time when the segment ended.
+            </summary>
+        </member>
+        <member name="T:Jellyfin.Plugin.PlaybackTrace.Plugin">
+            <summary>
+            Playback Trace plugin entry.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.PlaybackTrace.Plugin.#ctor(MediaBrowser.Common.Configuration.IApplicationPaths,MediaBrowser.Model.Serialization.IXmlSerializer)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Jellyfin.Plugin.PlaybackTrace.Plugin"/> class.
+            </summary>
+            <param name="applicationPaths">Application paths.</param>
+            <param name="xmlSerializer">XML serializer.</param>
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Plugin.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Plugin.Id">
+            <inheritdoc />
+        </member>
+        <member name="P:Jellyfin.Plugin.PlaybackTrace.Plugin.Instance">
+            <summary>
+            Gets the plugin instance.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.PlaybackTrace.Plugin.GetPages">
+            <inheritdoc />
+        </member>
+        <member name="T:Jellyfin.Plugin.PlaybackTrace.PluginServiceRegistrator">
+            <summary>
+            Registers Playback Trace services with Jellyfin.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.PlaybackTrace.PluginServiceRegistrator.RegisterServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,MediaBrowser.Controller.IServerApplicationHost)">
+            <inheritdoc />
+        </member>
+        <member name="T:Jellyfin.Plugin.PlaybackTrace.Services.PlaybackTraceStore">
+            <summary>
+            File-backed storage for playback trace records.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.PlaybackTrace.Services.PlaybackTraceStore.#ctor(MediaBrowser.Controller.Configuration.IServerConfigurationManager,Microsoft.Extensions.Logging.ILogger{Jellyfin.Plugin.PlaybackTrace.Services.PlaybackTraceStore})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Jellyfin.Plugin.PlaybackTrace.Services.PlaybackTraceStore"/> class.
+            </summary>
+            <param name="configurationManager">Jellyfin configuration manager.</param>
+            <param name="logger">Logger.</param>
+        </member>
+        <member name="M:Jellyfin.Plugin.PlaybackTrace.Services.PlaybackTraceStore.AppendEvent(Jellyfin.Plugin.PlaybackTrace.Models.PlaybackTraceEvent)">
+            <summary>
+            Appends an event.
+            </summary>
+            <param name="traceEvent">Trace event.</param>
+        </member>
+        <member name="M:Jellyfin.Plugin.PlaybackTrace.Services.PlaybackTraceStore.AppendSegment(Jellyfin.Plugin.PlaybackTrace.Models.WatchedSegment)">
+            <summary>
+            Appends a watched segment.
+            </summary>
+            <param name="segment">Watched segment.</param>
+        </member>
+        <member name="M:Jellyfin.Plugin.PlaybackTrace.Services.PlaybackTraceStore.ReadEvents(System.Nullable{System.DateTimeOffset},System.Nullable{System.Int32})">
+            <summary>
+            Reads events.
+            </summary>
+            <param name="since">Optional lower timestamp bound.</param>
+            <param name="limit">Optional result limit.</param>
+            <returns>Events.</returns>
+        </member>
+        <member name="M:Jellyfin.Plugin.PlaybackTrace.Services.PlaybackTraceStore.ReadSegments(System.Nullable{System.DateTimeOffset},System.Nullable{System.Int32})">
+            <summary>
+            Reads watched segments.
+            </summary>
+            <param name="since">Optional lower timestamp bound.</param>
+            <param name="limit">Optional result limit.</param>
+            <returns>Watched segments.</returns>
+        </member>
+    </members>
+</doc>

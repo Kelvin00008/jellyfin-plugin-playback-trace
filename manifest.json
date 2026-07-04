@@ -8,6 +8,14 @@
     "category": "Administration",
     "versions": [
       {
+        "version": "0.1.2.0",
+        "changelog": "Fix Jellyfin 10.10 plugin repository compatibility and package layout.",
+        "targetAbi": "10.10.0.0",
+        "sourceUrl": "https://raw.githubusercontent.com/Kelvin00008/jellyfin-plugin-playback-trace/main/releases/jellyfin-plugin-playback-trace-0.1.2.0.zip",
+        "checksum": "6b20ddb4c72b13debcd6baaaa774a750",
+        "timestamp": "2026-07-04T09:40:00Z"
+      },
+      {
         "version": "0.1.1.0",
         "changelog": "Build for Jellyfin 10.10.3 / .NET 8 compatibility.",
         "targetAbi": "10.10.3.0",

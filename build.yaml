@@ -2,7 +2,7 @@
 name: "Playback Trace"
 guid: "29d31092-3377-48c6-a161-ef432d6a61e4"
 version: 1
-targetAbi: "10.10.3.0"
+targetAbi: "10.10.0.0"
 framework: net8.0
 owner: "Kelvin00008"
 overview: "Detailed server-side playback timeline tracing"
@@ -11,4 +11,4 @@ category: "Administration"
 artifacts:
   - "Jellyfin.Plugin.PlaybackTrace.dll"
 changelog: |-
-  Initial build with watched segment tracking and HTML export.
+  Fix Jellyfin 10.10 plugin repository compatibility and package layout.
