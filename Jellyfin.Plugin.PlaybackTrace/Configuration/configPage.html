@@ -209,10 +209,10 @@
         const m = Math.floor((total % 3600) / 60);
         const s = total % 60;
         if (h > 0) {
-          return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+          return h + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
         }
 
-        return `${m}:${String(s).padStart(2, '0')}`;
+        return m + ':' + String(s).padStart(2, '0');
       }
 
       function eventLabel(eventType) {
@@ -274,28 +274,23 @@
           .filter(row => !search || rowText(row).includes(search));
 
         page.querySelector('#PlaybackTraceSummary').textContent =
-          `共 ${rows.length} 条，当前显示 ${visible.length} 条。观看片段会在暂停、快进、停止时生成。`;
+          '共 ' + rows.length + ' 条，当前显示 ' + visible.length + ' 条。观看片段会在暂停、快进、停止时生成。';
 
         if (visible.length === 0) {
           body.innerHTML = '<tr><td colspan="6" class="pt-empty">还没有记录。播放一段视频后，回到这里点刷新。</td></tr>';
           return;
         }
 
-        body.innerHTML = visible.map(row => `
-          <tr>
-            <td>${escapeHtml(formatDate(row.timestamp))}</td>
-            <td><span class="${pillClass(row.eventType)}">${escapeHtml(eventLabel(row.eventType))}</span></td>
-            <td>${escapeHtml(row.userName || '-')}</td>
-            <td>
-              <div>${escapeHtml(row.itemName || '-')}</div>
-              <div class="pt-muted">${escapeHtml(row.itemType || '')}</div>
-            </td>
-            <td>${escapeHtml(row.details || '-')}</td>
-            <td>
-              <div>${escapeHtml(row.device || '-')}</div>
-              <div class="pt-muted">${escapeHtml(row.client || '')}</div>
-            </td>
-          </tr>`).join('');
+        body.innerHTML = visible.map(row => [
+          '<tr>',
+          '<td>', escapeHtml(formatDate(row.timestamp)), '</td>',
+          '<td><span class="', pillClass(row.eventType), '">', escapeHtml(eventLabel(row.eventType)), '</span></td>',
+          '<td>', escapeHtml(row.userName || '-'), '</td>',
+          '<td><div>', escapeHtml(row.itemName || '-'), '</div><div class="pt-muted">', escapeHtml(row.itemType || ''), '</div></td>',
+          '<td>', escapeHtml(row.details || '-'), '</td>',
+          '<td><div>', escapeHtml(row.device || '-'), '</div><div class="pt-muted">', escapeHtml(row.client || ''), '</div></td>',
+          '</tr>'
+        ].join('')).join('');
       }
 
       function toEventRow(item) {
@@ -303,10 +298,10 @@
         const from = field(item, 'fromSeconds', 'FromSeconds');
         const to = field(item, 'toSeconds', 'ToSeconds');
         const pos = field(item, 'positionSeconds', 'PositionSeconds');
-        let details = `位置 ${formatDuration(pos)}`;
+        let details = '位置 ' + formatDuration(pos);
 
         if (from !== '' && to !== '') {
-          details = `${formatDuration(from)} -> ${formatDuration(to)}`;
+          details = formatDuration(from) + ' -> ' + formatDuration(to);
         }
 
         return {
@@ -335,7 +330,7 @@
           userName: field(item, 'userName', 'UserName'),
           itemName: field(item, 'itemName', 'ItemName'),
           itemType: '',
-          details: `${formatDuration(start)} - ${formatDuration(end)}，看了 ${formatDuration(watched)}，结束原因：${eventLabel(closedBy)}`,
+          details: formatDuration(start) + ' - ' + formatDuration(end) + '，看了 ' + formatDuration(watched) + '，结束原因：' + eventLabel(closedBy),
           device: field(item, 'deviceName', 'DeviceName'),
           client: field(item, 'clientName', 'ClientName')
         };
@@ -381,8 +376,8 @@
 
       page.addEventListener('viewshow', () => {
         const days = 30;
-        page.querySelector('#PlaybackTraceExportHtml').href = ApiClient.getUrl(`playback_trace/export.html?days=${days}`);
-        page.querySelector('#PlaybackTraceExportCsv').href = ApiClient.getUrl(`playback_trace/export.csv?days=${days}`);
+        page.querySelector('#PlaybackTraceExportHtml').href = ApiClient.getUrl('playback_trace/export.html?days=' + days);
+        page.querySelector('#PlaybackTraceExportCsv').href = ApiClient.getUrl('playback_trace/export.csv?days=' + days);
         page.querySelector('#PlaybackTraceEvents').href = ApiClient.getUrl('playback_trace/events?limit=500');
         page.querySelector('#PlaybackTraceSegments').href = ApiClient.getUrl('playback_trace/segments?limit=500');
         loadRows();
